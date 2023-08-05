@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('clinic_admins', function (Blueprint $table) {
+        Schema::create('specialties', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 30);
-            $table->string('email', 30);
-            $table->string('phone1', 15);
-            $table->string('phone2', 15)->nullable(true);
-            $table->integer('clinic_id');
+            $table->string('name', 40);
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clinic_admins');
+        Schema::dropIfExists('specialties');
     }
 };

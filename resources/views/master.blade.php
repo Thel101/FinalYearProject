@@ -199,8 +199,24 @@
                         <img src="{{ asset('dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
                             alt="User Image">
                     </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
+
+                    <div class="info dropdown">
+                        <a class="d-block dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                            data-bs-toggle="dropdown">
+                            {{ Auth::user()->name }}
+                        </a>
+
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    <button type="submit" class="btn"> Log out</button>
+                                    @csrf
+                                </form>
+
+                            </li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+
+                        </ul>
                     </div>
                 </div>
 
@@ -223,23 +239,85 @@
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item">
-                            <a href="{{ route('clinic.list') }}" class="nav-link">
-                                <i class="fa-solid fa-house-medical-flag"></i>
-                                <p>
-                                    Clinics
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.list') }}" class="nav-link">
-                                <i class="fa-solid fa-person-dots-from-line"></i>
-                                <p>
-                                    Clinic Admin
-                                </p>
-                            </a>
-                        </li>
-
+                        <!-- role based navigation bar-->
+                        <!-- super admin-->
+                        @if (Auth::user()->role == 'admin')
+                            <li class="nav-item">
+                                <a href="{{ route('clinic.list') }}" class="nav-link">
+                                    <i class="fa-solid fa-hospital"></i>
+                                    <p>
+                                        Clinics
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.list') }}" class="nav-link">
+                                    <i class="fa-solid fa-hospital-user"></i>
+                                    <p>
+                                        Clinic Admin
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('specialty.list') }}" class="nav-link">
+                                    <i class="fa-solid fa-stethoscope"></i>
+                                    <p>
+                                        Doctor Specialty
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('serviceCategory.list') }}" class="nav-link">
+                                    <i class="fa-solid fa-briefcase-medical"></i>
+                                    <p>
+                                        Service Category
+                                    </p>
+                                </a>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a href="{{ route('specialty.list') }}" class="nav-link">
+                                    <i class="fa-solid fa-stethoscope"></i>
+                                    <p>
+                                        Clinic Profile
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.profile') }}" class="nav-link">
+                                    <i class="fa-solid fa-stethoscope"></i>
+                                    <p>
+                                        My Profile
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('serviceCategory.list') }}" class="nav-link">
+                                    <i class="fa-solid fa-briefcase-medical"></i>
+                                    <p>
+                                        Doctor Specialty
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.doctorList') }}" class="nav-link">
+                                    <i class="fa-solid fa-briefcase-medical"></i>
+                                    <p>
+                                        Available Doctors
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('serviceCategory.list') }}" class="nav-link">
+                                    <i class="fa-solid fa-briefcase-medical"></i>
+                                    <p>
+                                        Meidacal Services
+                                    </p>
+                                </a>
+                            </li>
+                        @endif
+                        <!-- super admin-->
+                        <!-- role based navigation bar-->
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

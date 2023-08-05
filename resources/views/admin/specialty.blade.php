@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', 'Register Admin')
+@section('title', 'Clinic Specialty')
 @section('content')
 @section('pageTitle', 'Register Clinic Admin')
 

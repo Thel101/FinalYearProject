@@ -1,7 +1,7 @@
 @extends('master')
-@section('title', 'Admin List')
+@section('title', $clinic->clinic_name)
 @section('content')
-@section('pageTitle', 'Clinic Admin List')
+@section('pageTitle', 'Clinic Available Doctor')
 
 @if (session('message'))
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -198,45 +198,4 @@
     </div>
 
 
-@endsection
-@section('scriptSource')
-    <script>
-        $(document).ready(function() {
-            $('#clinicTable').DataTable();
-
-            // $('tbody tr').each(function(index, row) {
-            //     $opening = $(this).find('.opening').text();
-            //     $closing = $(this).find('.closing').text();
-            //     let opening = changeTimeFormat($opening);
-            //     let closing = changeTimeFormat($closing);
-
-            //     $(this).find('.opening').text(opening);
-            //     $(this).find('.closing').text(closing);
-
-            // })
-            // $('.updateBtn').click(function() {
-            //     var id = $(this).val();
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "http://127.0.0.1:8000/superadmin/clinics/edit/" + id,
-            //         success: function(response) {
-            //             $('#id').val(response.clinic_data.id);
-            //             $('#name').val(response.clinic_data.name);
-            //             $('#township').val(response.clinic_data.township);
-            //             $('#address').val(response.clinic_data.address);
-            //             $('#phone').val(response.clinic_data.phone);
-            //             $('#opening').val(response.clinic_data.opening_hour);
-            //             $('#closing').val(response.clinic_data.closing_hour);
-
-            //         }
-            //     });
-            // })
-
-            // $('.deactivateBtn').click(function() {
-            //     var id = $(this).val();
-            //     $('#updateId').val(id);
-            // })
-
-        });
-    </script>
 @endsection
