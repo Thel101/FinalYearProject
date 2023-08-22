@@ -18,10 +18,10 @@ class Doctors extends Model
         'degree',
         'experience',
         'consultation_fees',
-        'clinic_id',
         'photo'
-
-
-
     ];
+    public function clinics()
+    {
+        return $this->belongsToMany(Clinics::class)->withPivot(['schedule_day', 'start_time', 'end_time']);
+    }
 }

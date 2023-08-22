@@ -25,17 +25,17 @@
 
 
 <div class="col-12">
-    <div><a href="{{ route('admin.registerForm') }}" class="btn btn-primary mb-3"><i class="fa-solid fa-plus"></i>Add
+    <div><a href="{{ route('admin.doctorForm') }}" class="btn btn-primary mb-3"><i class="fa-solid fa-plus"></i>Add
             new
-            clinics admin</a></div>
+            Doctor</a></div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Registered Clinics Admin</h3>
+            <h3 class="card-title">Registered Doctors</h3>
         </div>
         <!-- /.card-header -->
 
 
-        @if (count($admins) == 0)
+        @if (count($doctors) == 0)
             <div class="card-body">
                 <div>
                     <h5 class="text-danger text-center">There is no registered clinics admin yet!</h5>
@@ -43,47 +43,46 @@
             </div>
         @else
             <div class="card-body">
-                <table id="clinicTable" class="table table-bordered table-hover">
+                <table id="doctorTable" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Photo</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Status</th>
-                            <th>Clinic</th>
+                            <th>SAMA</th>
+                            <th>Degree</th>
+                            <th>Specialty</th>
+                            <th>Fees</th>
                             <th>Action</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($admins as $a)
+
+                        @foreach ($doctors as $d)
                             <tr>
-                                <td>{{ $a->id }}</td>
-                                <td id="clinicName">{{ $a->name }}</td>
-                                <td id="clinicTownship">{{ $a->email }}</td>
-                                <td id="clinicPhone">{{ $a->phone1 }} | {{ $a->phone2 }}</td>
 
-                                @if ($a->status == 1)
-                                    <td id="clinicStats"> Active </td>
-                                @else
-                                    <td id="clinicStats">Inactive</td>
-                                @endif
-                                <td class="opening">{{ $a->clinic_name }}</td>
+                                <td><img style="width: 100px; height: 100px" class="img img-thumbnail"
+                                        src="{{ asset('storage/' . $d->photo) }}"></td>
+                                <td>{{ $d->name }}</td>
 
+                                <td>{{ $d->email }}</td>
+                                <td>{{ $d->phone }}</td>
+                                <td>{{ $d->license_no }}</td>
+                                <td>{{ $d->degree }}</td>
+                                <td>{{ $d->specialty_name }}</td>
+                                <td>{{ $d->consultation_fees }} MMK</td>
                                 <td>
-                                    <button type="button" class="btn btn-primary updateBtn" data-bs-toggle="modal"
-                                        data-bs-target="#updateForm" value="{{ $a->id }}" title="update"><i
-                                            class="fa-solid fa-pen-to-square"></i></button>
-                                    @if ($a->status == 1)
-                                        <button type="button" class="btn btn-danger deactivateBtn"
-                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
-                                            value="{{ $a->id }}" title="deactivate"><i
-                                                class="fa-solid fa-circle-xmark deactivateBtn"></i></button>
-                                    @else
-                                        <button type="button" class="btn btn-info deactivateBtn" data-bs-toggle="modal"
-                                            data-bs-target="#confirmModal" value="{{ $a->id }}"
-                                            title="reactivate"><i class="fa-solid fa-rotate-left"></i></button>
-                                    @endif
+                                    <a href="{{ route('admin.docSchedules', $d->id) }}"><button type="button"
+                                            class="btn btn-sm btn-primary" title="update"><i
+                                                class="fa-solid fa-pen-to-square"></i></button></a>
+
+                                    <button type="button" class="btn btn-sm btn-danger removeBtn"
+                                        data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                        value="{{ $d->id }}" title="remove doctor"><i
+                                            class="fa-solid fa-circle-xmark removeBtn"></i></button>
+
                                 </td>
                             </tr>
                         @endforeach
@@ -176,14 +175,14 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Update Clinic Information</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Remove Doctor</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <form class="row g-3" action="{{ route('clinic.deactivate') }}" method="GET">
-                            <strong>Are you sure you want to deactivate this clinic?</strong>
-                            <input type="hidden" value="" name="clinicId" id="updateId">
+                        <form class="row g-3" action="{{ route('admin.doctorRemove') }}" method="GET">
+                            <strong>Are you sure you want to remove doctor from the clinic?</strong>
+                            <input type="hidden" value="" name="doctorId" id="removeId">
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
                                     data-bs-dismiss="modal">Close</button>
@@ -198,4 +197,17 @@
     </div>
 
 
+@endsection
+@section('scriptSource')
+    <script>
+        $(document).ready(function() {
+            $('#doctorTable').DataTable();
+
+            $('.removeBtn').click(function() {
+                var id = $(this).val();
+                $('#removeId').val(id);
+
+            })
+        })
+    </script>
 @endsection

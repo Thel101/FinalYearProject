@@ -15,7 +15,8 @@ class ClinicAdminsController extends Controller
             ->where('role', 'clinic admin')
             ->leftJoin('clinics', 'users.clinic_id', 'clinics.id')->get();
 
-        return view('superAdmin.adminList', compact('admins'));
+        $clinics = Clinics::get();
+        return view('superAdmin.adminList', compact('admins', 'clinics'));
     }
     //direct to register page
 
@@ -30,6 +31,23 @@ class ClinicAdminsController extends Controller
         $data = $this->formatAdminInfo($request);
         User::create($data);
         return redirect()->route('admin.list')->with(['message' => 'New Admin created successfully']);
+    }
+    //admin edit form
+    public function editForm($id)
+    {
+        $admin = User::where('id', $id)->first();
+        return response()->json([
+            'status' => 'success',
+            'admin_data' => $admin,
+        ]);
+    }
+    //edit admin
+    public function editAdmin(Request $request)
+    {
+        $data = $this->formatAdminInfo($request);
+        $adminId = $request->adminId;
+        User::where('id', $adminId)->update($data);
+        return redirect()->route('admin.list')->with(['EditSuccess' => 'Admin profile successfully updated']);
     }
     //format clinic data
     private function formatAdminInfo(Request $request)

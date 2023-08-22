@@ -70,18 +70,19 @@
                                 <td class="closing">{{ $c->closing_hour }} </td>
 
                                 <td>
-                                    <button type="button" class="btn btn-primary updateBtn" data-bs-toggle="modal"
-                                        data-bs-target="#updateForm" value="{{ $c->id }}" title="update"><i
-                                            class="fa-solid fa-pen-to-square"></i></button>
+                                    <button type="button" class="btn btn-sm btn-primary updateBtn"
+                                        data-bs-toggle="modal" data-bs-target="#updateForm" value="{{ $c->id }}"
+                                        title="update"><i class="fa-solid fa-pen-to-square"></i></button>
                                     @if ($c->status == 1)
-                                        <button type="button" class="btn btn-danger deactivateBtn"
+                                        <button type="button" class="btn btn-sm btn-danger deactivateBtn"
                                             data-bs-toggle="modal" data-bs-target="#confirmModal"
                                             value="{{ $c->id }}" title="deactivate"><i
                                                 class="fa-solid fa-circle-xmark deactivateBtn"></i></button>
                                     @else
-                                        <button type="button" class="btn btn-info deactivateBtn" data-bs-toggle="modal"
-                                            data-bs-target="#confirmModal" value="{{ $c->id }}"
-                                            title="reactivate"><i class="fa-solid fa-rotate-left"></i></button>
+                                        <button type="button" class="btn btn-sm btn-info deactivateBtn"
+                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                            value="{{ $c->id }}" title="reactivate"><i
+                                                class="fa-solid fa-rotate-left"></i></button>
                                     @endif
                                 </td>
                             </tr>

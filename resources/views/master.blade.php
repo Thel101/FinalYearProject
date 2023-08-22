@@ -237,9 +237,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
-                        <!-- role based navigation bar-->
+
                         <!-- super admin-->
                         @if (Auth::user()->role == 'admin')
                             <li class="nav-item">
@@ -276,7 +274,7 @@
                             </li>
                         @else
                             <li class="nav-item">
-                                <a href="{{ route('specialty.list') }}" class="nav-link">
+                                <a href="{{ route('admin.clinicProfile') }}" class="nav-link">
                                     <i class="fa-solid fa-stethoscope"></i>
                                     <p>
                                         Clinic Profile
@@ -292,23 +290,23 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('serviceCategory.list') }}" class="nav-link">
-                                    <i class="fa-solid fa-briefcase-medical"></i>
-                                    <p>
-                                        Doctor Specialty
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="{{ route('admin.doctorList') }}" class="nav-link">
-                                    <i class="fa-solid fa-briefcase-medical"></i>
+                                    <i class="fa-solid fa-user-doctor"></i>
                                     <p>
                                         Available Doctors
                                     </p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('serviceCategory.list') }}" class="nav-link">
+                                <a href="#" class="nav-link">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                    <p>
+                                        Doctor Schedules
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.serviceList') }}" class="nav-link">
                                     <i class="fa-solid fa-briefcase-medical"></i>
                                     <p>
                                         Meidacal Services
@@ -331,10 +329,10 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6 offset-3">
+                        <div class="col-sm-6 offset-4">
                             <h1 class="m-0">@yield('pageTitle')</h1>
                         </div><!-- /.col -->
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                                 <li class="breadcrumb-item active">Dashboard v1</li>

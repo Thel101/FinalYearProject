@@ -35,15 +35,9 @@
         <!-- /.card-header -->
 
 
-        @if (count($admins) == 0)
+        @if (count($admins) != 0)
             <div class="card-body">
-                <div>
-                    <h5 class="text-danger text-center">There is no registered clinics admin yet!</h5>
-                </div>
-            </div>
-        @else
-            <div class="card-body">
-                <table id="clinicTable" class="table table-bordered table-hover">
+                <table id="adminTable" class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -71,18 +65,19 @@
                                 <td class="opening">{{ $a->clinic_name }}</td>
 
                                 <td>
-                                    <button type="button" class="btn btn-primary updateBtn" data-bs-toggle="modal"
+                                    <button type="button" class="btn btn-sm btn-primary updBtn" data-bs-toggle="modal"
                                         data-bs-target="#updateForm" value="{{ $a->id }}" title="update"><i
                                             class="fa-solid fa-pen-to-square"></i></button>
                                     @if ($a->status == 1)
-                                        <button type="button" class="btn btn-danger deactivateBtn"
+                                        <button type="button" class="btn btn-sm btn-danger deactivateBtn"
                                             data-bs-toggle="modal" data-bs-target="#confirmModal"
                                             value="{{ $a->id }}" title="deactivate"><i
                                                 class="fa-solid fa-circle-xmark deactivateBtn"></i></button>
                                     @else
-                                        <button type="button" class="btn btn-info deactivateBtn" data-bs-toggle="modal"
-                                            data-bs-target="#confirmModal" value="{{ $a->id }}"
-                                            title="reactivate"><i class="fa-solid fa-rotate-left"></i></button>
+                                        <button type="button" class="btn btn-sm btn-info deactivateBtn"
+                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                            value="{{ $a->id }}" title="reactivate"><i
+                                                class="fa-solid fa-rotate-left"></i></button>
                                     @endif
                                 </td>
                             </tr>
@@ -91,6 +86,13 @@
 
                 </table>
             </div>
+        @else
+            <div class="card-body">
+                <div>
+                    <h5 class="text-danger text-center">There is no registered clinics admin yet!</h5>
+                </div>
+            </div>
+
         @endif
         </tbody>
 
@@ -106,55 +108,62 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Update Clinic Information</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Update Admin Information</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <form class="row g-3" method="POST" action="{{ route('clinic.edit') }}">
+                        <form class="row g-3" method="POST" action="{{ route('admin.edit') }}">
                             @csrf
-                            <input type="hidden" name="clinicId" id="id" value="">
+                            <input type="hidden" name="adminId" id="id" value="">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name">Clinic name</label>
-                                    <input type="text" name="clinicName" class="form-control" id="name"
+                                    <label for="name">Admin name</label>
+                                    <input type="text" name="adminName" class="form-control" id="admin_name"
                                         value="">
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="township">Clinic township</label>
-                                <input type="text" name="clinicTownship" class="form-control" id="township"
+                                <label for="township">Email Address</label>
+                                <input type="text" name="adminEmail" class="form-control" id="admin_email"
                                     value="">
                             </div>
-                            <div class="col-12">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="address">Clinic address</label>
-                                    <input type="text" name="clinicAddress" class="form-control" id="address"
+                                    <label for="address">Phone 1</label>
+                                    <input type="text" name="phone1" class="form-control" id="phone1"
                                         value="">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="phone">Clinic phone</label>
-                                    <input type="text" name="clinicPhone" class="form-control" id="phone"
+                                    <label for="phone">Phone 2</label>
+                                    <input type="text" name="phone2" class="form-control" id="phone2"
                                         value="">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col">
                                     <div class="form-group">
-                                        <label for="opening">Clinic opening hour</label>
-                                        <input type="time" class="form-control" id="opening" name="openingHour"
-                                            value="">
+                                        <select class="form-select" name="clinic" id="clinic">
+                                            <option selected>Choose Clinic</option>
+                                            @foreach ($clinics as $c)
+                                                <option value="{{ $c->id }}">{{ $c->name }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="closing">Clinic closing hour</label>
-                                        <input type="time" class="form-control" id="closing" name="closingHour"
-                                            value="">
+                                        <select class="form-select" name="role" id="role">
+                                            <option selected>Choose Role</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="clinic admin">Clinic Admin</option>
+                                            <option value="clinic staff">Clinic Staff</option>
+
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -202,35 +211,25 @@
 @section('scriptSource')
     <script>
         $(document).ready(function() {
-            $('#clinicTable').DataTable();
+            $('#adminTable').DataTable();
 
-            // $('tbody tr').each(function(index, row) {
-            //     $opening = $(this).find('.opening').text();
-            //     $closing = $(this).find('.closing').text();
-            //     let opening = changeTimeFormat($opening);
-            //     let closing = changeTimeFormat($closing);
+            $('.updBtn').click(function() {
+                var id = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:8000/superadmin/clinics/admins/edit/" + id,
+                    success: function(response) {
+                        $('#id').val(response.admin_data.id);
+                        $('#admin_name').val(response.admin_data.name);
+                        $('#admin_email').val(response.admin_data.email);
+                        $('#phone1').val(response.admin_data.phone1);
+                        $('#phone2').val(response.admin_data.phone2);
 
-            //     $(this).find('.opening').text(opening);
-            //     $(this).find('.closing').text(closing);
 
-            // })
-            // $('.updateBtn').click(function() {
-            //     var id = $(this).val();
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "http://127.0.0.1:8000/superadmin/clinics/edit/" + id,
-            //         success: function(response) {
-            //             $('#id').val(response.clinic_data.id);
-            //             $('#name').val(response.clinic_data.name);
-            //             $('#township').val(response.clinic_data.township);
-            //             $('#address').val(response.clinic_data.address);
-            //             $('#phone').val(response.clinic_data.phone);
-            //             $('#opening').val(response.clinic_data.opening_hour);
-            //             $('#closing').val(response.clinic_data.closing_hour);
+                    }
 
-            //         }
-            //     });
-            // })
+                });
+            })
 
             // $('.deactivateBtn').click(function() {
             //     var id = $(this).val();

@@ -17,8 +17,8 @@ class SuperAdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->role == 'admin') {
-            return redirect()->route('admin.list');
+        if (Auth::user()->role != 'admin') {
+            return back();
         }
 
         return $next($request);

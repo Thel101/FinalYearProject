@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class SuperAdminController extends Controller
 {
+    //dashboard
+    public function dashboard()
+    {
+        return view('superAdmin.dashboard');
+    }
     //register page
     public function registerClinic()
     {
@@ -33,6 +38,7 @@ class SuperAdminController extends Controller
     public function editForm($id)
     {
         $clinic = Clinics::where('id', $id)->first();
+        logger($clinic);
         return response()->json([
             'status' => 'suucess',
             'clinic_data' => $clinic,
@@ -43,9 +49,10 @@ class SuperAdminController extends Controller
     {
         $clinicId = $request->clinicId;
         $data = $this->formatClinicData($request);
-        Clinics::where('id', $request->clinicId)->update($data);
+        Clinics::where('id', $clinicId)->update($data);
         return redirect()->route('clinic.list')->with(['EditSuccess' => 'Clinic has been successfully updated']);
     }
+    //deatviate clinic
     public function deactivateClinic(Request $request)
     {
         $id = $request->clinicId;

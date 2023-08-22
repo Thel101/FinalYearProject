@@ -25,7 +25,6 @@ return new class extends Migration
             $table->string('degree', 50);
             $table->longText('experience');
             $table->integer('consultation_fees');
-            $table->integer('clinic_id');
             $table->string('photo');
             $table->timestamps();
         });
