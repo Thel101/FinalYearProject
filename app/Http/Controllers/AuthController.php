@@ -13,12 +13,12 @@ class AuthController extends Controller
     }
     public function dashboard()
     {
-        // dd(Auth::user()->role);
-
-        if (Auth::user()->role == 'admin') {
-            return redirect()->route('superAdmin.clinic');
+    dd(Auth::user()->role);
+        if (Auth::user()->role == 'clinic admin') {
+            return redirect()->route('admin.doctorList');
         } else {
-            return redirect()->route('admin.clinicProfile');
+            return redirect()->route('superAdmin.clinic');
         }
+
     }
 }

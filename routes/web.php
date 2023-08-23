@@ -24,14 +24,18 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
-    Route::middleware('super_admin')->group(function () {
-        Route::get('/form', [SuperAdminController::class, 'registerClinic'])->name('superAdmin.clinic');
-        Route::prefix('superadmin/clinics')->group(function () {
-            Route::post('/register', [SuperAdminController::class, 'Clinic'])->name('clinic.register');
-            Route::get('/list', [SuperAdminController::class, 'clinicList'])->name('clinic.list');
-            Route::get('/edit/{id}', [SuperAdminController::class, 'editForm'])->name('clinic.editForm');
-            Route::post('/edit', [SuperAdminController::class, 'editClinic'])->name('clinic.edit');
-            Route::get('/deactivate', [SuperAdminController::class, 'deactivateClinic'])->name('clinic.deactivate');
+    Route::middleware(['super_admin'])->group(function () {
+        Route::get('/',[SuperAdminController::class, 'adminProfile'])->name('superAdmin.profile');
+        Route::prefix('/superadmin')->group(function () {
+            Route::prefix('/clinics')->group(function(){
+                Route::get('/form', [SuperAdminController::class, 'registerClinic'])->name('superAdmin.clinic');
+                Route::post('/register', [SuperAdminController::class, 'Clinic'])->name('clinic.register');
+                Route::get('/list', [SuperAdminController::class, 'clinicList'])->name('clinic.list');
+                Route::get('/edit/{id}', [SuperAdminController::class, 'editForm'])->name('clinic.editForm');
+                Route::post('/edit', [SuperAdminController::class, 'editClinic'])->name('clinic.edit');
+                Route::get('/deactivate', [SuperAdminController::class, 'deactivateClinic'])->name('clinic.deactivate');
+            });
+
 
             Route::prefix('/admins')->group(function () {
                 Route::get('/', [ClinicAdminsController::class, 'admin'])->name('admin.list');

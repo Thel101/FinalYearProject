@@ -1,5 +1,5 @@
 @extends('master')
-@section('title', $clinic->clinic_name)
+@section('title')
 @section('content')
 @section('pageTitle', 'Clinic Profile')
 
