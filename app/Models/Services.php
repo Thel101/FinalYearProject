@@ -17,7 +17,8 @@ class Services extends Model
         'components',
         'price',
         'promotion_rate',
-        'promotion'
+        'promotion',
+        'available_token_count'
     ];
     protected $casts = [
         'components' => 'array'

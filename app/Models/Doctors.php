@@ -18,6 +18,8 @@ class Doctors extends Model
         'degree',
         'experience',
         'consultation_fees',
+        'consultation_duration',
+        'consultation_duration',
         'photo'
     ];
     public function clinics()

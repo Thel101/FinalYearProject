@@ -1,5 +1,5 @@
 @extends('master')
-@section('title')
+@section('title', $clinic->clinic_name)
 @section('content')
 @section('pageTitle', 'Clinic Profile')
 
@@ -19,14 +19,14 @@
         <!-- /.card-header -->
 
         <!-- form start -->
-        <form class="row g-3 m-1">
+        <form class="row g-3 m-1" action="" method="">
             <div class="col-md-6">
-                <label for="inputEmail4" class="form-label">Name</label>
-                <input type="email" class="form-control" id="inputEmail4" value="{{ $clinic->clinic_name }}">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" name="clinicName" id="name" value="{{ $clinic->clinic_name }}">
             </div>
             <div class="col-md-6">
-                <label for="inputPassword4" class="form-label">Phone</label>
-                <input type="tel" class="form-control" id="inputPassword4" value="{{ $clinic->clinic_phone }}">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" name="clinicPhon" ="phone" value="{{ $clinic->clinic_phone }}">
             </div>
             <div class="col-12">
                 <label for="inputAddress" class="form-label">Address</label>
@@ -50,16 +50,9 @@
                 <label for="inputZip" class="form-label">Closing Hour</label>
                 <input type="text" class="form-control" value="{{ $clinic->closing_hour }}" id="inputZip">
             </div>
-            <div class="col-12">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="gridCheck">
-                    <label class="form-check-label" for="gridCheck">
-                        Check me out
-                    </label>
-                </div>
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Sign in</button>
+
+            <div class="col-12 my-3">
+                <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
             </div>
         </form>
     </div>

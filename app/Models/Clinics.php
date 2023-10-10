@@ -9,6 +9,16 @@ class Clinics extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name', 'address', 'township', 'phone', 'status', 'opening_hour', 'closing_hour'
+        'name',
+        'address',
+        'township',
+        'phone',
+        'photo',
+        'status',
+        'opening_hour',
+        'closing_hour'
     ];
+    public function doctors(){
+        return $this->hasMany(Doctors::class);
+    }
 }

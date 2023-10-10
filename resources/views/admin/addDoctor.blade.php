@@ -58,10 +58,10 @@
                 <form action="{{ route('admin.addDoctor') }}" method="POST">
                     @csrf
                     <input type="hidden" name="doctorId" value="{{ $existing_doctor->id }}">
-                    <button class="btn btn-primary my-3" type="submit">Add Doctor to Clinic</button>
+
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title" id="scheduleForm">This is Shceudle Form</h3>
+                            <h3 class="card-title" id="scheduleForm">Doctor Shceudle</h3>
                         </div>
                         <div class="card-body" id="add-schedule">
                             <div id="schedules">
@@ -92,6 +92,7 @@
                             <input type="button" class="btn btn-primary" value="Add Schedules" id="add-row">
                         </div>
                     </div>
+                    <button class="btn btn-primary my-3" type="submit">Add Doctor to Clinic</button>
                 </form>
             </div>
 

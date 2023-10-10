@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClinicAdmins;
 use App\Models\Clinics;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ClinicAdminsController extends Controller
 {
@@ -28,6 +28,7 @@ class ClinicAdminsController extends Controller
     }
     public function createAdmin(Request $request)
     {
+        $this->validateAdminInfo($request);
         $data = $this->formatAdminInfo($request);
         User::create($data);
         return redirect()->route('admin.list')->with(['message' => 'New Admin created successfully']);
@@ -49,7 +50,22 @@ class ClinicAdminsController extends Controller
         User::where('id', $adminId)->update($data);
         return redirect()->route('admin.list')->with(['EditSuccess' => 'Admin profile successfully updated']);
     }
-    //format clinic data
+    //deactivate clinic admin
+    public function deactivateAdmin(Request $request)
+    {
+        $id = $request->adminId;
+        $inactiveAdmin = User::where('id', $id)->first();
+        if ($inactiveAdmin->status == 1) {
+            $inactiveAdmin->status = 0;
+            $inactiveAdmin->save();
+        } else {
+            $inactiveAdmin->status = 1;
+            $inactiveAdmin->save();
+        };
+
+        return redirect()->route('admin.list')->with(['DeactivateSuccess' => 'Admin status has been successfully updated']);
+    }
+    //format clinic admin data
     private function formatAdminInfo(Request $request)
     {
         return [
@@ -60,5 +76,17 @@ class ClinicAdminsController extends Controller
             'role' => $request->role,
             'clinic_id' => $request->clinic
         ];
+    }
+    private function validateAdminInfo(Request $request){
+        $validation = [
+            'adminName' => 'required|min:5',
+            'adminEmail' => 'required | unique:users,email' ,
+            'phone1' => 'required | numeric' ,
+            'phone2' => 'nullable|numeric',
+            'role' => 'required',
+            'clinic' => 'required'
+        ];
+
+        Validator::make($request->all(), $validation)->validate();
     }
 }

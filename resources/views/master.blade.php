@@ -37,6 +37,7 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
 
+        @if(Auth::user()->role == 'admin' || Auth::user()->role = 'clinic admin')
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
@@ -46,7 +47,7 @@
                             class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">Home</a>
+                    <a href="{{route('patient.home')}}" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="#" class="nav-link">Contact</a>
@@ -181,6 +182,10 @@
             </ul>
         </nav>
         <!-- /.navbar -->
+        @else
+
+        @endif
+
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -206,32 +211,11 @@
                             {{ Auth::user()->name }}
                         </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    <button type="submit" class="btn"> Log out</button>
-                                    @csrf
-                                </form>
-
-                            </li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-
-                        </ul>
                     </div>
                 </div>
 
                 <!-- SidebarSearch Form -->
-                <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search"
-                            aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
@@ -298,7 +282,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{route('doctors.schedules')}}" class="nav-link">
                                     <i class="fa-regular fa-calendar-days"></i>
                                     <p>
                                         Doctor Schedules
@@ -314,6 +298,17 @@
                                 </a>
                             </li>
                         @endif
+                        <li class="nav-item">
+                            <form action="{{route('logout')}}" method="POST" class="nav-link">
+                            @csrf
+
+                                <button class="btn btn-link text-white" style="text-decoration: none; padding:0" type="submit">
+                                    <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Logout
+                                </button>
+
+                        </form>
+
+                        </li>
                         <!-- super admin-->
                         <!-- role based navigation bar-->
                     </ul>
@@ -329,7 +324,7 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-6 offset-4">
+                    <div class="col-sm-6 offset-4">
                             <h1 class="m-0">@yield('pageTitle')</h1>
                         </div><!-- /.col -->
                         <div class="col-sm-2">

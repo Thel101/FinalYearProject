@@ -14,7 +14,7 @@
     <form action="{{ route('admin.doctorRegister') }}" method="POST" enctype="multipart/form-data">
         @csrf
     <!-- general form elements -->
-    <div class="card card-primary">
+    <div class="card card-secondary">
         <div class="card-header">
             <h3 class="card-title">Doctor Log-in Information</h3> </i>
         </div>
@@ -29,7 +29,7 @@
                         <label for="docName">Doctor name</label>
                         <input type="text" name="name" class="form-control" id="name"
                             placeholder="Enter doctor name"
-                            @if (session('message')) value="{{ $existing_doctor->name }}" @endif>
+                            @if (session('message')) value="{{ $existing_doctor->name }}" @endif value="{{old('name')}}">
                     </div>
                     <div class="form-group">
                         <label for="docName">Doctor Photo</label>
@@ -39,13 +39,13 @@
 
                     <div class="form-group">
                         <label for="docLicense">License Number</label>
-                        <input type="text" name="license" class="form-control" id="docLicense" placeholder="172789">
+                        <input type="text" name="license" class="form-control" id="docLicense" placeholder="172789" value="{{old('license')}}">
                     </div>
 
                     <div class="form-group">
                         <label for="docEmail">Email address</label>
                         <input type="email" name="email" class="form-control" id="docEmail"
-                            placeholder="Enter email address">
+                            placeholder="Enter email address" value="{{old('email')}}">
                     </div>
 
                 </div>
@@ -55,7 +55,7 @@
                     <div class="form-group">
                         <label for="docPhone">Phone Number</label>
                         <input type="tel" name="phone" class="form-control" id="docPhone"
-                            placeholder="Enter doctor phone number">
+                            placeholder="Enter doctor phone number" value="{{old('phone')}}">
                     </div>
 
                     <div class="form-group">
@@ -72,19 +72,25 @@
                     <div class="form-group">
                         <label for="docDegree">Doctor Degree</label>
                         <input type="text" name="degree" class="form-control" id="docDegree"
-                            placeholder="e.g. MBBS, Yangon">
+                            placeholder="e.g. MBBS, Yangon" value="{{old('degree')}}">
                     </div>
 
                     <div class="form-group">
                         <label for="docExperience">Experience</label>
                         <input type="text" name="experience" class="form-control" id="docExperience"
-                            placeholder="Enter doctor clinical experience">
+                            placeholder="Enter doctor clinical experience" value="{{old('experience')}}">
                     </div>
 
                     <div class="form-group">
                         <label for="docFees">Consultation Fees</label>
                         <input type="number" name="fees" class="form-control" id="docFees"
-                            placeholder="Enter consultation fees">
+                            placeholder="Enter consultation fees" value="{{old('fees')}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">Consultation Duration</label>
+                        <input type="text" pattern="\d{}2:\d{2}:\d{2}" name="duration" class="form-control" id="duration"
+                            placeholder="00:00:00" value="{{old('duration')}}">
                     </div>
                 </div>
 
@@ -95,9 +101,9 @@
             <!-- /.card-body -->
     </div>
     <!-- /.card -->
-    <div class="card card-primary">
+    <div class="card card-secondary">
         <div class="card-header">
-            <h3 class="card-title" id="scheduleForm">This is Shceudle Form</h3>
+            <h3 class="card-title" id="scheduleForm">Doctor Shceudle Form</h3>
         </div>
         <div class="card-body" id="add-schedule">
             <div id="schedules">
@@ -105,7 +111,7 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label for="day">Schedule Day</label>
-                            <input type="text" name="day[]" class="form-control">
+                            <input type="text" name="day[]" class="form-control" value="{{old('day[]')}}">
                         </div>
                     </div>
                     <div class="col-4">
@@ -130,7 +136,7 @@
     </div>
     <div class="row">
         <div class="col-8 offset-2">
-            <button type="submit" class="btn btn-success my-3">Add Doctor</button>
+            <button type="submit" class="btn btn-block btn-primary my-3">Add Doctor</button>
         </div>
     </div>
 

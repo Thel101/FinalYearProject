@@ -22,7 +22,7 @@
         <form class="row g-3 m-1">
             <div class="col-md-6">
                 <label for="inputEmail4" class="form-label">Name</label>
-                <input type="text" class="form-control" id="inputEmail4" value="{{ $admin->name }}">
+                <input type="email" class="form-control" id="inputEmail4" value="{{ $admin->name }}">
             </div>
             <div class="col-md-6">
                 <label for="inputPassword4" class="form-label">Email</label>

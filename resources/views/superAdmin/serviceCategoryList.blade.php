@@ -48,8 +48,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Image</th>
                             <th>Name</th>
-                            <th>Type</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -58,8 +58,8 @@
                         @foreach ($services as $s)
                             <tr>
                                 <td>{{ $s->id }}</td>
+                                <td><img style="width: 50px; height:50px" class="img img-thumbnail" src="{{asset('storage/'. $s->photo)}}"></td></td>
                                 <td id="clinicName">{{ $s->name }}</td>
-                                <td id="c">{{ $s->type }}</td>
                                 @if ($s->status == 1)
                                     <td id="clinicStats"> Active </td>
                                 @else
@@ -87,7 +87,7 @@
     </div>
     <!-- /.card -->
     <!-- /.card -->
-    <!-- update modal -->
+    <!-- register modal -->
     <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -97,7 +97,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('serviceCategory.register') }}">
+                        <form method="POST" action="{{ route('serviceCategory.register') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="form-group">
@@ -107,14 +107,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Service Type</label>
-                                <select class="form-select" aria-label="Default select example" name="type">
-                                    <option selected>Choose Service Type</option>
-                                    <option value="Imaging">Imaging</option>
-                                    <option value="Blood Tests">Blood Tests</option>
-
-                                </select>
+                                <label for="image">Service Image</label>
+                               <input class="form-control" type="file" name="serviceImage" id="image">
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Add Service Category</button>
@@ -126,23 +122,34 @@
             </div>
         </div>
     </div>
-    <!-- deactivate modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <!-- update modal -->
+    <div class="modal fade" id="updateForm" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Update Clinic Information</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Medical Service Category</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <form class="row g-3" action="{{ route('clinic.deactivate') }}" method="GET">
-                            <strong>Are you sure you want to deactivate this clinic?</strong>
-                            <input type="hidden" value="" name="clinicId" id="updateId">
+                        <form method="POST" action="{{ route('serviceCategory.edit') }}" enctype="multipart/form-data">
+                            @csrf
+
+                            <input type="hidden" name="serviceId" id="editId" value="">
+                            <div class="form-group">
+                                <label for="serviceName">Service Category name</label>
+                                <input type="text" name="serviceName" class="form-control" id="editName"
+                                    value="">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="image">Service Image</label>
+                               <input class="form-control" type="file" name="serviceImage" id="image">
+                            </div>
+
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Confirm</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Update Service Category</button>
                             </div>
                         </form>
                     </div>
@@ -153,59 +160,27 @@
     </div>
 
 
+
 @endsection
 @section('scriptSource')
     <script>
         $(document).ready(function() {
             $('#clinicTable').DataTable();
 
-            // function changeTimeFormat(str) {
 
-            //     let sep = ":"
-            //     let ampm = " am"
-            //     var res = str.split(":", 2);
+            $('.updateBtn').click(function() {
+                var id = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:8000/superadmin/clinics/serviceCategory/edit/" + id,
+                    success: function(response) {
+                        $('#editId').val(response.category_data.id);
+                        $('#editName').val(response.category_data.name);
 
-            //     let hours = res[0];
-            //     let mins = res[1];
-            //     res[2] = mins;
-            //     res[1] = sep;
-            //     res[3] = ampm;
-            //     if (hours >= 12) {
-            //         res[3] = " pm";
-            //     }
-            //     if (hours > 12) {
-            //         res[0] = hours - 12;
-            //     }
-            //     return time = res.join("");
-            // }
 
-            // $('tbody tr').each(function(index, row) {
-            //     $opening = $(this).find('.opening').text();
-            //     $closing = $(this).find('.closing').text();
-            //     let opening = changeTimeFormat($opening);
-            //     let closing = changeTimeFormat($closing);
-
-            //     $(this).find('.opening').text(opening);
-            //     $(this).find('.closing').text(closing);
-
-            // })
-            // $('.updateBtn').click(function() {
-            //     var id = $(this).val();
-            //     $.ajax({
-            //         type: "GET",
-            //         url: "http://127.0.0.1:8000/superadmin/clinics/edit/" + id,
-            //         success: function(response) {
-            //             $('#id').val(response.clinic_data.id);
-            //             $('#name').val(response.clinic_data.name);
-            //             $('#township').val(response.clinic_data.township);
-            //             $('#address').val(response.clinic_data.address);
-            //             $('#phone').val(response.clinic_data.phone);
-            //             $('#opening').val(response.clinic_data.opening_hour);
-            //             $('#closing').val(response.clinic_data.closing_hour);
-
-            //         }
-            //     });
-            // })
+                    }
+                });
+            })
 
             // $('.deactivateBtn').click(function() {
             //     var id = $(this).val();

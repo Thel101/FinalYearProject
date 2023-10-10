@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('clinics_doctors', function (Blueprint $table) {
             $table->id();
-            $table->integer('clinics_id');
-            $table->integer('doctors_id');
+            $table->unsignedBigInteger('clinics_id');
+            $table->unsignedBigInteger('doctors_id');
+            $table->foreign('clinics_id')->references('id')->on('clinics')->onDelete('cascade');
+            $table->foreign('doctors_id')->references('id')->on('doctors')->onDelete('cascade');
             $table->string('schedule_day')->nullable(true);
             $table->time('start_time')->nullable(true);
             $table->time('end_time')->nullable(true);

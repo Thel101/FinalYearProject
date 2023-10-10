@@ -59,7 +59,9 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         @foreach ($services as $s)
+                        <tr>
                             <td><img style="width: 50px; height: 50px" class="img img-thumbnail"
                                     src="{{ asset('storage/' . $s->photo) }}"></td>
                             <td>{{ $s->name }}</td>
@@ -88,6 +90,7 @@
                                         class="fa-solid fa-rotate-left"></i></button> --}}
 
                             </td>
+                        </tr>
                         @endforeach
                     </tbody>
 

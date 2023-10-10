@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('address', 100);
             $table->string('township', 20);
             $table->string('phone', 20);
+            $table->string('photo');
             $table->integer('status')->default(1); // 1=active, 0= inactive
             $table->time('opening_hour');
             $table->time('closing_hour');

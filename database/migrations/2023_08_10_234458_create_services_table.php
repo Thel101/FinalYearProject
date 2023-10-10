@@ -22,8 +22,9 @@ return new class extends Migration
             $table->string('description');
             $table->json('components');
             $table->integer('price');
-            $table->integer('promotion_rate')->default(0);
-            $table->integer('promotion')->default(0);
+            $table->unsignedInteger('promotion_rate')->default(0);
+            $table->unsignedInteger('promotion')->default(0);
+            $table->string('available_token_count');
             $table->timestamps();
         });
     }

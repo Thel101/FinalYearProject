@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceCategory extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'status', 'type'];
+    protected $fillable = ['name', 'status','photo'];
 }

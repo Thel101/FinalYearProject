@@ -56,7 +56,7 @@
                     <tbody>
                         @foreach ($clinics as $c)
                             <tr>
-                                <td>{{ $c->id }}</td>
+                                <td><img style="width:100px; height:100px" class="img img-thumbnail" src="{{asset('storage/'.$c->photo)}}"></td>
                                 <td id="clinicName">{{ $c->name }}</td>
                                 <td id="clinicTownship">{{ $c->township }}</td>
                                 <td id="clinicPhone">{{ $c->phone }}</td>
@@ -106,26 +106,38 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <form class="row g-3" method="POST" action="{{ route('clinic.edit') }}">
+                        <form class="row g-3" method="POST" action="{{ route('clinic.edit') }}" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="clinicId" id="id" value="">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="name">Clinic name</label>
                                     <input type="text" name="clinicName" class="form-control" id="name"
-                                        value="">
+                                        value="{{old('clinicName')}}">
+                                    <div class="invalid-feedback"></div>
+
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="township">Clinic township</label>
                                 <input type="text" name="clinicTownship" class="form-control" id="township"
-                                    value="">
+                                    value="{{old('clinicTownship')}}">
+                                <div class="invalid-feedback"></div>
+
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="">Clinic Photo</label>
+                                    <input type="file" name="clinicPhoto" class="form-control" id="photo">
+                                </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="address">Clinic address</label>
                                     <input type="text" name="clinicAddress" class="form-control" id="address"
-                                        value="">
+                                        value="{{old('clinicAddress')}}">
+                                    <div class="invalid-feedback"></div>
+
                                 </div>
                             </div>
 
@@ -133,15 +145,18 @@
                                 <div class="form-group">
                                     <label for="phone">Clinic phone</label>
                                     <input type="text" name="clinicPhone" class="form-control" id="phone"
-                                        value="">
+                                        value="{{old('clinicPhone')}}">
+                                    <div class="invalid-feedback"></div>
+
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="opening">Clinic opening hour</label>
-                                        <input type="time" class="form-control" id="opening" name="openingHour"
-                                            value="">
+                                        <input type="time" class="form-control" id="opening" name="openingHour">
+                                        <div class="invalid-feedback"></div>
+
                                     </div>
 
                                 </div>
@@ -149,15 +164,16 @@
                                     <div class="form-group">
                                         <label for="closing">Clinic closing hour</label>
                                         <input type="time" class="form-control" id="closing" name="closingHour"
-                                            value="">
+                                            value="{{old('closingHour')}}">
+
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                    data-bs-dismiss="modal" id="btnClose">Close</button>
+                                <button type="submit" class="btn btn-primary" id="btnSave">Save changes</button>
                             </div>
                         </form>
                     </div>
@@ -198,7 +214,7 @@
     <script>
         $(document).ready(function() {
             $('#clinicTable').DataTable();
-
+            //format clinic opening and closing time
             function changeTimeFormat(str) {
 
                 let sep = ":"
@@ -229,6 +245,7 @@
                 $(this).find('.closing').text(closing);
 
             })
+            //update clinic info
             $('.updateBtn').click(function() {
                 var id = $(this).val();
                 $.ajax({
@@ -246,12 +263,80 @@
                     }
                 });
             })
-
+            //deactivate clinic
             $('.deactivateBtn').click(function() {
                 var id = $(this).val();
                 $('#updateId').val(id);
             })
+            //buttton disabled for error message
+            var errorMessage= $('.invalid-feedback');
+            var saveButton = $('#btnSave');
 
+            function checkForError(){
+                if(errorMessage.text().trim() !== ''){
+                    saveButton.prop('disabled',true);
+                }
+                else{
+                    saveButton.prop('disabled', false);
+                }
+            }
+            //client-side validation
+            $('#name').on('input blur', function() {
+            var clinicName = $(this).val();
+            if (clinicName.length < 10) {
+                $(this).addClass('is-invalid');
+                $(this).next('.invalid-feedback').text('Clinic name must be at least 10 characters.');
+            } else {
+                $(this).removeClass('is-invalid');
+                $(this).next('.invalid-feedback').text('');
+            }
+        });
+
+
+        $('#township').on('input blur', function() {
+            var clinicTownship = $(this).val();
+            if (clinicTownship.length < 5) {
+                $(this).addClass('is-invalid');
+                $(this).next('.invalid-feedback').text('Township must be at least 5 characters.');
+
+            } else {
+                $(this).removeClass('is-invalid');
+                $(this).next('.invalid-feedback').text('');
+            }
+            checkForError();
+
+        });
+        $('#address').on('input blur', function() {
+            var clinicAddress = $(this).val();
+            if (clinicAddress.length < 10) {
+                $(this).addClass('is-invalid');
+                $(this).next('.invalid-feedback').text('Address must be at least 10 characters.');
+
+            } else {
+                $(this).removeClass('is-invalid');
+                $(this).next('.invalid-feedback').text('');
+            }
+            checkForError();
+        });
+        $('#phone').on('input blur', function() {
+            var clinicPhone = $(this).val();
+            if (isNaN(clinicPhone)) {
+                $(this).addClass('is-invalid');
+                $(this).next('.invalid-feedback').text('Phone number must contain only numbers.');
+            } else {
+                $(this).removeClass('is-invalid');
+                $(this).next('.invalid-feedback').text('');
+            }
+        checkForError();
+        });
+
+        //close button function
+        $('#btnClose').click(function(){
+            $('.invalid-feedback').empty();
+            $('#township').removeClass('is-invalid');
+            $('#address').removeClass('is-invalid');
+            $('#phone').removeClass('is-invalid');
+        })
         });
     </script>
 @endsection
