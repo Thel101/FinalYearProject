@@ -75,12 +75,12 @@
                                         title="update"><i class="fa-solid fa-pen-to-square"></i></button>
                                     @if ($c->status == 1)
                                         <button type="button" class="btn btn-sm btn-danger deactivateBtn"
-                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                            data-bs-toggle="modal" data-bs-target="#confirmModal" data-status="active"
                                             value="{{ $c->id }}" title="deactivate"><i
                                                 class="fa-solid fa-circle-xmark deactivateBtn"></i></button>
                                     @else
                                         <button type="button" class="btn btn-sm btn-info deactivateBtn"
-                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                            data-bs-toggle="modal" data-bs-target="#confirmModal" data-status="inactive"
                                             value="{{ $c->id }}" title="reactivate"><i
                                                 class="fa-solid fa-rotate-left"></i></button>
                                     @endif
@@ -193,7 +193,7 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <form class="row g-3" action="{{ route('clinic.deactivate') }}" method="GET">
-                            <strong>Are you sure you want to deactivate this clinic?</strong>
+                            <strong id="statusMessage"></strong>
                             <input type="hidden" value="" name="clinicId" id="updateId">
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
@@ -266,7 +266,16 @@
             //deactivate clinic
             $('.deactivateBtn').click(function() {
                 var id = $(this).val();
+                var status = $(this).attr('data-status');
+                if(status=='active'){
+                    $('#statusMessage').text('Are you sure you want to deactivate this clinic?');
+                }
+                else{
+                    $('#statusMessage').text('Are you sure you want to reactivate this clinic?');
+                }
                 $('#updateId').val(id);
+                // console.log(status);
+
             })
             //buttton disabled for error message
             var errorMessage= $('.invalid-feedback');

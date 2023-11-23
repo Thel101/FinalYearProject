@@ -70,12 +70,12 @@
                                             class="fa-solid fa-pen-to-square"></i></button>
                                     @if ($a->status == 1)
                                         <button type="button" class="btn btn-sm btn-danger deactivateBtn"
-                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                            data-bs-toggle="modal" data-bs-target="#confirmModal" data-status="active"
                                             value="{{ $a->id }}" title="deactivate"><i
                                                 class="fa-solid fa-circle-xmark deactivateBtn"></i></button>
                                     @else
                                         <button type="button" class="btn btn-sm btn-info deactivateBtn"
-                                            data-bs-toggle="modal" data-bs-target="#confirmModal"
+                                            data-bs-toggle="modal" data-bs-target="#confirmModal"  data-status="inactive"
                                             value="{{ $a->id }}" title="reactivate"><i
                                                 class="fa-solid fa-rotate-left"></i></button>
                                     @endif
@@ -198,11 +198,9 @@
                 <div class="modal-body">
                     <div class="card-body">
                         <form class="row g-3" action="{{ route('admin.deactivate') }}" method="GET">
-                            @if ($a->status == 1)
-                            <strong>Are you sure you want to deactivate this admin?</strong>
-                            @else
-                            <strong>Are you sure you want to reactivate this admin?</strong>
-                            @endif
+
+                            <strong id="statusMessage"></strong>
+
                             <input type="hidden" value="" name="adminId" id="updateId">
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary"
@@ -227,6 +225,7 @@
             //update clinic info
             $('.updBtn').click(function() {
                 var id = $(this).val();
+                console.log(id);
                 $.ajax({
                     type: "GET",
                     url: "http://127.0.0.1:8000/superadmin/clinics/admins/edit/" + id,
@@ -343,6 +342,13 @@
             })
             $('.deactivateBtn').click(function() {
                 var id = $(this).val();
+                var status= $(this).attr('data-status');
+                if(status=='active'){
+                    $('#statusMessage').text('Are you sure you want to deactivate this admin?')
+                }
+                else{
+                    $('#statusMessage').text('Are you sure you want to reactivate this admin?')
+                }
                 $('#updateId').val(id);
             })
 

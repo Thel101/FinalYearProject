@@ -9,10 +9,12 @@ use App\Models\Services;
 use App\Models\Specialty;
 use Illuminate\Http\Request;
 use App\Models\ServiceCategory;
+use App\Models\ServiceAppointment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use App\Models\ServiceMedicalRecords;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -45,14 +47,14 @@ class AdminController extends Controller
             ->leftJoin('service_categories', 'service_categories.id', 'services.category_id')
             ->where('services.clinic_id', $clinicId)
             ->get();
-        return view('admin.serviceList', compact('services', 'clinic'));
+        return view('admin.services.serviceList', compact('services', 'clinic'));
     }
     //service register form
     public function registerFormService()
     {
         $clinic = $this->clinicInfo();
         $category = ServiceCategory::get();
-        return view('admin.registerService', compact('clinic', 'category'));
+        return view('admin.doctors.registerService', compact('clinic', 'category'));
     }
     //register service
     public function registeService(Request $request)
@@ -66,6 +68,107 @@ class AdminController extends Controller
         return redirect()->route('admin.serviceList')->with(['message' => 'Service Registered Successfully']);
     }
 
+    public function serviceAppointments()
+    {
+        $clinic = $this->clinicInfo();
+        $clinicId = Auth::user()->clinic_id;
+        $serviceAppointments = ServiceAppointment::select('service_appointments.*', 'services.name as service_name')
+            ->where('service_appointments.clinic_id', $clinicId)
+            ->where('status', 'booked')
+            ->leftJoin('Services', 'services.id', 'service_appointments.service_id')
+            ->get();
+            $counts=$this->getServiceAppointmentCount($clinicId);
+        return view('admin.services.serviceAppointmentTemplate', compact('serviceAppointments', 'clinic','counts'));
+    }
+
+
+    //admin dasbhoard booked service appointments
+    public function bookedAppointments()
+    {
+        $clinic = $this->clinicInfo();
+        $clinicId = Auth::user()->clinic_id;
+        $appointments = $this->getBookedServiceAppointments($clinicId);
+        $counts = $this->getServiceAppointmentCount($clinicId);
+        // dd($appointments);
+        return view('admin.services.serviceAppointmentList', compact('appointments','clinic','counts'));
+    }
+    //admin dashboard recorded appointments
+    public function recordedAppointments()
+    {
+        $clinic = $this->clinicInfo();
+        $clinicId = Auth::user()->clinic_id;
+        $appointments = $this->getRecordedServicAppointments($clinicId);
+        $counts = $this->getServiceAppointmentCount($clinicId);
+        $records = [];
+        foreach($appointments as $appointment){
+            $serviceRecordLists= ServiceMedicalRecords::select('service_medical_records.*')
+                ->where('service_medical_records.service_appointment_id', $appointment->id)
+                ->get();
+                $records[$appointment->id] = $serviceRecordLists;
+        }
+        return view('admin.services.recordedServiceAppointmentList', compact('appointments','clinic','counts','records'));
+    }
+    //admin dashboard cancelled appointments
+    public function cancelledAppointments()
+    {
+        $clinic = $this->clinicInfo();
+        $clinicId = Auth::user()->clinic_id;
+        $appointments = $this->getCancelledServicAppointments($clinicId);
+        $counts = $this->getServiceAppointmentCount($clinicId);
+        return view('admin.services.cancelledServiceAppointment', compact('appointments','clinic','counts'));
+    }
+    public function missedAppointments(){
+        $clinic = $this->clinicInfo();
+        $clinicId = Auth::user()->clinic_id;
+        $appointments = $this->getMissedServiceAppointments($clinicId);
+        $counts = $this->getServiceAppointmentCount($clinicId);
+        return view('admin.services.missedServiceAppointment', compact('appointments','clinic','counts'));
+    }
+    //booked appointment list
+    private function getBookedServiceAppointments($clinicId)
+    {
+        return ServiceAppointment::select('service_appointments.*', 'services.name as service_name')
+        ->where('service_appointments.clinic_id', $clinicId)
+        ->where('status', 'booked')
+        ->leftJoin('Services', 'services.id', 'service_appointments.service_id')
+        ->get();
+    }
+
+    //record sent appointment list
+    private function getRecordedServicAppointments($clinicId)
+    {
+        return ServiceAppointment::select('service_appointments.*', 'services.name as service_name')
+        ->where('service_appointments.clinic_id', $clinicId)
+        ->where('status', 'recorded')
+        ->leftJoin('Services', 'services.id', 'service_appointments.service_id')
+        ->get();
+    }
+    //cancelled appointment list
+    private function getCancelledServicAppointments($clinicId)
+    {
+        return ServiceAppointment::select('service_appointments.*', 'services.name as service_name')
+        ->where('service_appointments.clinic_id', $clinicId)
+        ->where('status', 'cancelled')
+        ->leftJoin('Services', 'services.id', 'service_appointments.service_id')
+        ->get();
+    }
+    //missed appointment list
+    private function getMissedServiceAppointments($clinicId){
+        $today = now()->toDateString();
+        return ServiceAppointment::select('service_appointments.*', 'services.name as service_name')
+        ->where('service_appointments.clinic_id', $clinicId)
+        ->whereDate('service_appointments.appointment_date','>=', $today)
+        ->where('status', 'booked')
+        ->leftJoin('Services', 'services.id', 'service_appointments.service_id')
+        ->get();
+    }
+    private function getServiceAppointmentCount($clinicId){
+        $booked = $this->getBookedServiceAppointments($clinicId)->count();
+        $recorded = $this->getRecordedServicAppointments($clinicId)->count();
+        $cancelled = $this->getCancelledServicAppointments($clinicId)->count();
+        $missed = $this->getMissedServiceAppointments($clinicId)->count();
+        return [$booked, $recorded, $cancelled, $missed];
+    }
 
     //retrieve clinic info
     private function clinicInfo()

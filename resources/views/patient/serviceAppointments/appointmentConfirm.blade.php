@@ -2,7 +2,14 @@
 @section('title', 'Appointment Confirmation Page')
 @section('template')
 
-
+<div>
+    @if (isset($appointmentSuccessMessage))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ $appointmentSuccessMessage}}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+</div>
 
 <div class="card col-lg-9 col-md-6 offset-lg-2">
 
@@ -10,10 +17,10 @@
       <h4 class="card-title text-info font-bold">This is your appointment Details</h4>
 
       <div class="offset-lg-1 p-2">
-        <div class="col-lg-6 col-md-4 my-1"> <span class="card-text lead">Service : {{$service->name}}</span></div>
+        <div class="col-lg-6 col-md-4 my-1"> <span class="card-text lead">Service : {{$serviceInfo->name}}</span></div>
 
-        <div class="col-lg-6 col-md-4 my-1"> <span class="card-text lead">Clinic : {{$clinic->name}}</span></div>
-        <div class="col-lg-6 col-md-4 my-1"> <span class="card-text lead">Location : {{$clinic->address}} ,{{$clinic->township}}</span></div>
+        <div class="col-lg-6 col-md-4 my-1"> <span class="card-text lead">Clinic : {{$clinicInfo->name}}</span></div>
+        <div class="col-lg-6 col-md-4 my-1"> <span class="card-text lead">Location : {{$clinicInfo->address}} ,{{$clinicInfo->township}}</span></div>
       </div>
 
 
@@ -28,12 +35,12 @@
                 <p class="card-text lead">Total Fees</p>
             </div>
             <div class="col-lg-6 col-md-6">
-                <p class="card-text lead">{{$recordedData->patient_name}}</p>
-                <p class="card-text lead">{{$recordedData->appointment_date}}</p>
-                <p class="card-text lead">{{$recordedData->time_slot}}</p>
-                <p class="card-text lead">{{$recordedData->fees}} MMK</p>
-                <p class="card-text lead">{{$recordedData->discount}} %</p>
-                <p class="card-text lead">{{$recordedData->total_fees}} MMK</p>
+                <p class="card-text lead">{{$serviceAppointmentInfo->patient_name}}</p>
+                <p class="card-text lead">{{$serviceAppointmentInfo->appointment_date}}</p>
+                <p class="card-text lead">{{$serviceAppointmentInfo->time_slot}}</p>
+                <p class="card-text lead">{{$serviceAppointmentInfo->fees}} MMK</p>
+                <p class="card-text lead">{{$serviceAppointmentInfo->discount}} %</p>
+                <p class="card-text lead">{{$serviceAppointmentInfo->total_fees}} MMK</p>
             </div>
         </div>
 

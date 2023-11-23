@@ -6,7 +6,6 @@
     <table id="doctorScheduleTable" class="table table-bordered table-hover">
         <thead>
             <tr>
-                <th>Clinic ID</th>
                 <th>Doc ID</th>
                 <th>Name</th>
                 <th>Specialty</th>
@@ -20,7 +19,7 @@
         <tbody>
             @foreach ($doctorSchedulesWithScheduleDays as $schedule )
             <tr>
-                <td>{{$schedule['clinic_id']}}</td>
+
                 <td>{{$schedule['doctor_id']}}</td>
                 <td>{{$schedule['doctor_name']}}</td>
                 <td>{{$schedule['doctor_specialty']}}</td>
@@ -112,10 +111,7 @@
                                 <div class="form-group">
                                     <label>Specialty</label>
                                     <select class="form-select" name="specialty" id="docSpecialty">
-                                        <option selected value="">Choose Specialty</option>
-                                            @foreach ($specialties as $s)
-                                                <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                            @endforeach
+
                                         </select>
                                     </select>
                                 </div>

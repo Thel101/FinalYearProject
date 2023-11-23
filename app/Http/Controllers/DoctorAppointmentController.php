@@ -11,6 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\DoctorAppointment;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -44,7 +45,7 @@ class DoctorAppointmentController extends Controller
 
 
         }
-        return view('patient.doctorAppointment', compact('doctor','time','availableClinics', 'clinicSchedules'));
+        return view('patient.doctorAppointments.doctorAppointment', compact('doctor','time','availableClinics', 'clinicSchedules'));
 
 
     }
@@ -140,9 +141,8 @@ class DoctorAppointmentController extends Controller
 
         // session(['appointmentData' => compact('doctorAppointmentInfo', 'clinicInfo', 'docInfo')]);
 
-        // return view('patient.doctorAppointmentConfirm', compact('doctorAppointmentInfo','date','clinicInfo','docInfo'))
-        // ->with('appointmentSuccessMessage','Doctor Appointment booked successfully');
         $request->session()->put('doctorAppointmentInfo', $doctorAppointmentInfo);
+        $request->session()->put('date', $date);
         $request->session()->put('clinicInfo', $clinicInfo);
         $request->session()->put('docInfo', $docInfo);
         return redirect()->route('doctorAppointment.email');
@@ -163,8 +163,20 @@ class DoctorAppointmentController extends Controller
         ->leftJoin('users','users.id', 'doctor_appointments.booking_person')
         ->first();
         // dd($appointmentData->toArray());
-        $pdf = PDF::loadView('patient.downloadAppointment',compact('appointmentData'));
+        $pdf = PDF::loadView('patient.doctorAppointments.downloadAppointment',compact('appointmentData'));
         return $pdf->stream('appointment_information.pdf');
+
+    }
+    ///patient cancel appointments
+    public function cancelAppointment(Request $request){
+        $appointmentId = $request->input('appointmentID');
+        DoctorAppointment::where('id', $appointmentId)->update(['status'=> 'cancelled']);
+        return redirect()->route('patient.doctorAppointments')->with(['cancelMessage'=>'Appointment has been cancelled!']);
+    }
+    //doctor dashboard appointment view
+
+    private function doctorDasbhoard(){
+        return Doctors::where('email',Session::get('email'))->first();
 
     }
     private function infoClinic($clinic){

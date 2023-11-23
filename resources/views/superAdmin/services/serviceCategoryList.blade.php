@@ -2,6 +2,14 @@
 @section('title', 'Service Category List')
 @section('content')
 @section('pageTitle', 'Medical Service Category List')
+<style>
+    label.error {
+    color: red;
+    font-size: 1rem;
+    display: block;
+    margin-top: 5px;
+}
+</style>
 
 @if (session('message'))
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -9,9 +17,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
-@if (session('EditSuccess'))
+@if (session('editSuccess'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>{{ session('EditSuccess') }}</strong>
+        <strong>{{ session('editSuccess') }}</strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
@@ -58,17 +66,20 @@
                         @foreach ($services as $s)
                             <tr>
                                 <td>{{ $s->id }}</td>
-                                <td><img style="width: 50px; height:50px" class="img img-thumbnail" src="{{asset('storage/'. $s->photo)}}"></td></td>
-                                <td id="clinicName">{{ $s->name }}</td>
+                                <td><img style="width: 50px; height:50px" class="img img-thumbnail"
+                                        src="{{ asset('storage/' . $s->photo) }}"></td>
+                                </td>
+                                <td id="serviceName">{{ $s->name }}</td>
                                 @if ($s->status == 1)
-                                    <td id="clinicStats"> Active </td>
+                                    <td id="serviceStatus"> Active </td>
                                 @else
-                                    <td id="clinicStats">Inactive</td>
+                                    <td id="serviceStatus">Inactive</td>
                                 @endif
                                 <td>
-                                    <button type="button" class="btn btn-primary updateBtn" data-bs-toggle="modal"
-                                        data-bs-target="#updateForm" value="{{ $s->id }}" title="update"><i
-                                            class="fa-solid fa-pen-to-square"></i></button>
+
+                                    <button type="button" class="btn btn-primary updateCategoryBtn"
+                                        data-bs-toggle="modal" data-bs-target="#updateForm" value="{{ $s->id }}"
+                                        title="update"><i class="fa-solid fa-pen-to-square"></i></button>
 
                                 </td>
                             </tr>
@@ -78,9 +89,7 @@
                 </table>
             </div>
         @endif
-        </tbody>
 
-        </table>
 
 
         <!-- /.card-body -->
@@ -88,8 +97,8 @@
     <!-- /.card -->
     <!-- /.card -->
     <!-- register modal -->
-    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true" role="dialog">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add New Medical Service Category</h5>
@@ -97,23 +106,28 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('serviceCategory.register') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('serviceCategory.register') }}"
+                            enctype="multipart/form-data" id="serviceCategoryForm">
                             @csrf
-
                             <div class="form-group">
                                 <label for="serviceName">Service Category name</label>
                                 <input type="text" name="serviceName" class="form-control" id="name"
-                                    value="">
+                                    value="" required>
+                                <div id="serviceNameError" class="invalid-feedback d-block"></div>
                             </div>
+
 
                             <div class="form-group">
                                 <label for="image">Service Image</label>
-                               <input class="form-control" type="file" name="serviceImage" id="image">
+                                <input class="form-control @error('serviceImage') is-invalid @enderror" type="file"
+                                    name="serviceImage" id="image" required>
+                                <div id="serviceImageError" class="invalid-feedback d-block"></div>
                             </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Add Service Category</button>
+                                <button type="submit" class="btn btn-primary" id="btnAdd">Add Service
+                                    Category</button>
                             </div>
                         </form>
                     </div>
@@ -127,28 +141,31 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add New Medical Service Category</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="exampleModalLabel">Update Medical Service Category</h5>
+                    <button type="button" class="btn-close btnClose" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-                        <form method="POST" action="{{ route('serviceCategory.edit') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('serviceCategory.edit') }}"
+                            enctype="multipart/form-data">
                             @csrf
 
                             <input type="hidden" name="serviceId" id="editId" value="">
                             <div class="form-group">
                                 <label for="serviceName">Service Category name</label>
                                 <input type="text" name="serviceName" class="form-control" id="editName"
-                                    value="">
+                                    value="" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="image">Service Image</label>
-                               <input class="form-control" type="file" name="serviceImage" id="image">
+                                <input class="form-control" type="file" name="serviceImage" id="image">
                             </div>
 
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary btnClose"
+                                    data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Update Service Category</button>
                             </div>
                         </form>
@@ -165,28 +182,20 @@
 @section('scriptSource')
     <script>
         $(document).ready(function() {
+
             $('#clinicTable').DataTable();
-
-
-            $('.updateBtn').click(function() {
-                var id = $(this).val();
+            $('#serviceCategoryForm').validate();
+            $('.updateCategoryBtn').click(function(){
+                var id= $(this).val();
                 $.ajax({
                     type: "GET",
                     url: "http://127.0.0.1:8000/superadmin/clinics/serviceCategory/edit/" + id,
-                    success: function(response) {
+                    success: function (response) {
                         $('#editId').val(response.category_data.id);
                         $('#editName').val(response.category_data.name);
-
-
                     }
                 });
             })
-
-            // $('.deactivateBtn').click(function() {
-            //     var id = $(this).val();
-            //     $('#updateId').val(id);
-            // })
-
-        });
+        })
     </script>
 @endsection

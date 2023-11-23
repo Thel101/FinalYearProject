@@ -48,7 +48,7 @@ class AppointmentConfirm extends Mailable
     public function content()
     {
         return new Content(
-            view: 'email.appointmentConfirm',
+            view: 'emails.appointmentConfirm',
         );
     }
 

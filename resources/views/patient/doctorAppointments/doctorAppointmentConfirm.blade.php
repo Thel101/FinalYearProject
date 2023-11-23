@@ -39,7 +39,7 @@
             <div class="col-lg-6 col-md-6">
                 <p id="name" class="card-text lead">{{$doctorAppointmentInfo->patient_name}}</p>
                 <p id="symptoms" class="card-text lead">{{$doctorAppointmentInfo->symptoms}}</p>
-                <p id="date" class="card-text lead">{{$date}}</p>
+                {{-- <p id="date" class="card-text lead">{{$date}}</p> --}}
                 <p id="time" class="card-text lead">{{$doctorAppointmentInfo->time_slot}}</p>
                 <p id="doc_fees" class="card-text lead">{{$doctorAppointmentInfo->doctor_fees}} MMK</p>
                 <p id="clinic_charge" class="card-text lead">{{$doctorAppointmentInfo->clinic_charges}} MMK</p>

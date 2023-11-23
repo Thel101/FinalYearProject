@@ -19,6 +19,7 @@ class Clinics extends Model
         'closing_hour'
     ];
     public function doctors(){
-        return $this->hasMany(Doctors::class);
+        return $this->belongsToMany(Doctors::class)->withPivot(['schedule_day', 'start_time', 'end_time']);
+
     }
 }

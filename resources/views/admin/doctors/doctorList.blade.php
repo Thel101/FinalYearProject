@@ -65,7 +65,7 @@
 
                                 <td><img style="width: 100px; height: 100px" class="img img-thumbnail"
                                         src="{{ asset('storage/' . $d->photo) }}"></td>
-                                <td>DR. {{ $d->name }}</td>
+                                <td>{{ $d->name }}</td>
 
                                 <td>{{ $d->email }}</td>
                                 <td>{{ $d->phone }}</td>
@@ -95,6 +95,8 @@
 
         <!-- /.card-body -->
     </div>
+    <div><a href="{{ route('admin.searchDoctorForm') }}" class="btn btn-primary mb-3"><i class="fa-solid fa-plus"></i>Add
+        from existing doctor</a></div>
     <!-- /.card -->
     <!-- /.card -->
     <!-- deactivate modal -->

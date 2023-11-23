@@ -26,4 +26,8 @@ class Doctors extends Model
     {
         return $this->belongsToMany(Clinics::class)->withPivot(['schedule_day', 'start_time', 'end_time']);
     }
+    public function specialty()
+    {
+        return $this->belongsTo(Specialty::class, 'specialty_id');
+    }
 }

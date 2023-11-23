@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Clinics;
 use Carbon\Carbon;
+use App\Models\Clinics;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,7 +16,7 @@ class SuperAdminController extends Controller
     //register page
     public function registerClinic()
     {
-        return view('superAdmin.registerClinic');
+        return view('superAdmin.clinics.registerClinic');
     }
     //register function
     public function Clinic(Request $request)
@@ -33,7 +34,7 @@ class SuperAdminController extends Controller
     public function clinicList()
     {
         $clinics = Clinics::get();
-        return view('superAdmin.clinicList', compact('clinics'));
+        return view('superAdmin.clinics.clinicList', compact('clinics'));
     }
 
     //direct to edit form
@@ -55,11 +56,11 @@ class SuperAdminController extends Controller
         $data = $this->formatClinicData($request);
         // dd($data);
         if($request->hasFile('clinicPhoto')){
-            // $oldImage = Clinics::where('id', $clinicId)->first();
-            // $dbImage = $oldImage->photo;
-            // if($dbImage!==null){
-            //     Storage::delete('public/'. $dbImage);
-            // }
+            $oldImage = Clinics::where('id', $clinicId)->first();
+            $dbImage = $oldImage->photo;
+            if($dbImage!==null){
+                Storage::delete('public/'. $dbImage);
+            }
             $filename = uniqid(). $request->file('clinicPhoto')->getClientOriginalName();
             $request->file('clinicPhoto')->storeAs('public/' , $filename);
             $data['photo'] = $filename;
@@ -90,7 +91,6 @@ class SuperAdminController extends Controller
             'address' => $request->clinicAddress,
             'township' => $request->clinicTownship,
             'phone' => $request->clinicPhone,
-            'photo' => $request->clinicPhoto,
             'opening_hour' => $request->openingHour,
             'closing_hour' => $request->closingHour
         ];
@@ -99,16 +99,22 @@ class SuperAdminController extends Controller
 
         $validationRules =
         [
-            'clinicName' => 'required|bail|min:10',
+            'clinicName' => 'required|min:10',
             'clinicAddress' => 'required|min:10',
             'clinicTownship' => 'required|min:5',
             'clinicPhone' => 'required|numeric',
-            'clinicPhoto' => 'required|mimes:jpeg, png, webp',
+            'clinicPhoto'=>'mimes:jpeg,png,webp|image',
             'openingHour' => 'required',
             'closingHour' => 'required',
 
       ];
-      Validator::make($request->all(),$validationRules)->validate();
+      $validator= Validator::make($request->all(),$validationRules);
+      if ($validator->fails()) {
+        // Log validation errors
+        Log::error('Validation errors', $validator->errors()->toArray());
 
+        // Redirect back with validation errors (for debugging purposes)
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
     }
 }

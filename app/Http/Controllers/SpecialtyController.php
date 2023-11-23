@@ -10,7 +10,7 @@ class SpecialtyController extends Controller
     public function specialty()
     {
         $specialties = Specialty::get();
-        return view('superAdmin.specialtyList', compact('specialties'));
+        return view('superAdmin.services.specialtyList', compact('specialties'));
     }
     //direct to register page
     public function createSpecialty(Request $request)

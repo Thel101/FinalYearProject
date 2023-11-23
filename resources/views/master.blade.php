@@ -297,6 +297,22 @@
                                     </p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.serviceAppointments') }}" class="nav-link">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    <p>
+                                        Service Appointments
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.doctorAppointments') }}" class="nav-link">
+                                    <i class="fa-solid fa-notes-medical"></i>
+                                    <p>
+                                        Doctor Appointments
+                                    </p>
+                                </a>
+                            </li>
                         @endif
                         <li class="nav-item">
                             <form action="{{route('logout')}}" method="POST" class="nav-link">
@@ -376,6 +392,8 @@
     <!-- data tables -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+    <!---- validate --->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"> </script>
     @yield('scriptSource')
 
 </body>

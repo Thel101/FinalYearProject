@@ -31,6 +31,7 @@ return new class extends Migration
             $table->smallInteger('patient_age');
             $table->string('allergy')->nullable(true);
             $table->string('disease')->nullable(true);
+            $table->enum('status', ['booked','consulted','missed', 'cancelled'])->default('booked');
             $table->timestamps();
         });
     }

@@ -37,7 +37,7 @@ class AppointmentController extends Controller
 
         ];
 
-        return view('patient.appointment', compact('service', 'dates', 'timeSlots'));
+        return view('patient.serviceAppointments.appointment', compact('service', 'dates', 'timeSlots'));
     }
     public function services($id){
         $services = Services::select('services.*', 'clinics.name as clinic_name', 'clinics.phone as clinic_phone')
@@ -53,8 +53,7 @@ class AppointmentController extends Controller
 
     //book service appointment
     public function serviceAppointment(Request $request){
-
-
+        // dd($request);
         $serviceId= $request->serviceId;
         $promoRate= Services::where('id', $serviceId)->pluck('promotion_rate')->first();
         $fees = $request->fees;
@@ -64,8 +63,12 @@ class AppointmentController extends Controller
         $this->validatePatientInfo($request);
         $data = $this->formatAppointmentInfo($request);
         // dd($data);
-        $filename = uniqid(). $request->file('referral')->getClientOriginalName();
-        $data['referral_letter'] = $filename;
+        if($request->hasFile('referral')){
+            $filename = uniqid(). $request->file('referral')->getClientOriginalName();
+            $request->file('referral')->storeAs('public/', $filename);
+            $data['referral_letter'] = $filename;
+        }
+
         $count= ServiceAppointment::where('service_id', $request->serviceId)
         ->where('appointment_date', $request->appointmentDate)
         ->where('time_slot',$request->appointmentTime)->count();
@@ -80,21 +83,35 @@ class AppointmentController extends Controller
         // dd($additionalData);
         $finalData = array_merge($data, $additionalData);
         // dd($finalData);
-        $recordedData=ServiceAppointment::create($finalData);
-        $request->file('referral')->storeAs('public/', $filename);
-        $service=$this->infoService($recordedData->service_id);
-        $clinic=$this->infoClinic(($recordedData->clinic_id));
-        return view('patient.appointmentConfirm', compact('recordedData','service', 'clinic'));
+        $serviceAppointmentInfo=ServiceAppointment::create($finalData);
 
+        // dd('success');
+        $appointmentDate= Carbon::parse($serviceAppointmentInfo->appointment_date);
+        $date= $appointmentDate->format('Y-m-d');
+        // dd($date);
+        $clinicInfo= $this->infoClinic($serviceAppointmentInfo->clinic_id);
+        // dd($clinicInfo);
+        $serviceInfo = Services::where('id', $serviceId)->first();
+
+        $request->session()->put('serviceAppointmentInfo', $serviceAppointmentInfo);
+        $request->session()->put('date', $date);
+        $request->session()->put('clinicInfo', $clinicInfo);
+        $request->session()->put('serviceInfo', $serviceInfo);
+        return redirect()->route('serviceAppointment.email');
     }
+
+
     //check availablity of timeslot for a data
     public function appointmentDate(Request $request){
       $chosenDate= $request->appointmentDate;
       $service = $request->service;
+
       $timeSlots= ServiceAppointment::where('appointment_date', $chosenDate)
       ->where('service_id', $service)->pluck('time_slot');
       $timeSlotsCount = $timeSlots->count();
-      if($timeSlotsCount>0){
+      $availableSlot = Services::where('id', $service)->value('available_token_count');
+      $availableSlot = (int) $availableSlot;
+      if($timeSlotsCount>$availableSlot){
         return response()->json([
             'status'=> 'success',
             'timeslot'=> $timeSlots,
@@ -106,6 +123,12 @@ class AppointmentController extends Controller
         ]);
       }
 
+    }
+    //cancel appointments
+    public function cancelAppointment(Request $request){
+        $appointmentId = $request->input('appointmentID');
+        ServiceAppointment::where('id', $appointmentId)->update(['status'=> 'cancelled']);
+        return redirect()->route('patient.serviceAppointments')->with(['cancelMessage'=>'Appointment has been cancelled!']);
     }
 
 
@@ -153,7 +176,7 @@ class AppointmentController extends Controller
                 'patient_name' => $request->input('patientName'),
                 'phone_1' => $request->input('patientPhone'),
                 'phone_2' => $request->input('patientPhone2'),
-                'patient_age' => $request->input('patientAge'),
+                'patient_age' => $request->input('nonRegisterPatientAge'),
                 'allergy' => $request->input('allergy'),
                 'disease' => $request->input('disease'),
             ];

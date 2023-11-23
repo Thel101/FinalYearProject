@@ -39,9 +39,12 @@
                 @enderror
               </div>
 
-              <div class="form-floating">
+              <div class="input-group form-floating">
                 <input type="password" class="form-control @error('patientPassword') is-invalid @enderror" id="floatingPassword" placeholder="Password" name="patientPassword" value={{old('patientPassword')}}>
                 <label for="floatingPassword">Password</label>
+                <span class="input-group-text">
+                  <i id="showPassword" class="far fa-eye-slash"></i>
+                </span>
                 @error('patientPassword')
                 <div class="invalid-feedback">{{$message}}</div>
                 @enderror
@@ -61,4 +64,21 @@
 
 
   </main>
+@endsection
+@section('scriptSource')
+<script>
+    $(document).ready(function(){
+        $('#showPassword').click(function () {
+            var password= $('#floatingPassword');
+           var type = password.attr('type');
+           if (type === "password") {
+                password.attr("type", "text");
+                $("#showPassword i").removeClass("fa-eye-slash").addClass("fa-eye");
+            } else {
+                password.attr("type", "password");
+                $("#showPassword i").removeClass("fa-eye").addClass("fa-eye-slash");
+            }
+        });
+    })
+</script>
 @endsection

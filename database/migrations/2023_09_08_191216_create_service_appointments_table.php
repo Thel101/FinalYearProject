@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('allergy')->nullable(true);
             $table->string('disease')->nullable(true);
             $table->integer('token_number');
+            $table->enum('status', ['booked','recorded','missed', 'cancelled'])->default('booked');
             $table->timestamps();
         });
     }

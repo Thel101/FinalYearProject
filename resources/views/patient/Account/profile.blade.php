@@ -109,6 +109,14 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ route('patient.changePassword') }}" class="nav-link">
+                                    <i class="fa-solid fa-lock-open mr-1"></i>
+                                    <p>
+                                       Change Password
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ route('patient.home') }}" class="nav-link">
                                     <i class="fa-solid fa-house mr-1"></i>
                                     <p>
@@ -129,8 +137,7 @@
 
                             </li>
 
-                        <!-- super admin-->
-                        <!-- role based navigation bar-->
+
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

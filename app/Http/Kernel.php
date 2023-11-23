@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\DoctorMiddleware;
 use App\Http\Middleware\PatientMiddleware;
 use App\Http\Middleware\SuperAdminMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -69,5 +70,6 @@ class Kernel extends HttpKernel
         'super_admin' => SuperAdminMiddleware::class,
         'admin' => AdminMiddleware::class,
         'patient' => PatientMiddleware::class,
+        'doctor'=> DoctorMiddleware::class,
     ];
 }

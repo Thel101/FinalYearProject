@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Clinics;
 use App\Models\User;
+use App\Models\Clinics;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ClinicAdminsController extends Controller
@@ -16,7 +17,7 @@ class ClinicAdminsController extends Controller
             ->leftJoin('clinics', 'users.clinic_id', 'clinics.id')->get();
 
         $clinics = Clinics::get();
-        return view('superAdmin.adminList', compact('admins', 'clinics'));
+        return view('superAdmin.admins.adminList', compact('admins', 'clinics'));
     }
     //direct to register page
 
@@ -37,6 +38,7 @@ class ClinicAdminsController extends Controller
     public function editForm($id)
     {
         $admin = User::where('id', $id)->first();
+        Log::info("Admin retrieved". json_encode($admin->toArray()));
         return response()->json([
             'status' => 'success',
             'admin_data' => $admin,
