@@ -89,9 +89,12 @@ class DoctorController extends Controller
     {
 
         $doctorId = $request->doctorID;
+
         $clinicId = Auth::user()->clinic_id;
         $doctor = Doctors::find($doctorId);
+
         $days = $request->day;
+
         $starts = $request->startTime;
         $ends = $request->endTime;
         if ($doctor) {
@@ -107,8 +110,8 @@ class DoctorController extends Controller
                     ]
                 );
             }
+            return redirect()->route('admin.doctorList')->with(['message' => 'Doctor Has Been Added Successfully']);
         }
-        return redirect()->route('admin.doctorList')->with(['message' => 'Doctor Has Been Added Successfully']);
     }
     //remove doctor from clinic
     public function removeDoctor(Request $request)
@@ -328,7 +331,7 @@ class DoctorController extends Controller
     public function doctorDashboardAppointment()
     {
         $doctor = $this->doctorDasbhoard();
-        // $docID = $doctor->id;
+        $docID = $doctor->id;
         $counts = $this->getDoctorAppointmentCount($docID);
 
         return view('doctor.appointmentTableTemplate', compact('doctor', 'counts'));

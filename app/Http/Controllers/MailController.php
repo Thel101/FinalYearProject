@@ -19,7 +19,7 @@ class MailController extends Controller
         $docInfo = $request->session()->get('docInfo');
         $clinicInfo = $request->session()->get('clinicInfo');
         $date = $request->session()->get('date');
-        Mail::to($request->user())->send(new AppointmentConfirm($doctorAppointmentInfo));
+        // Mail::to($request->user())->send(new AppointmentConfirm($doctorAppointmentInfo));
         return view('patient.doctorAppointments.doctorAppointmentConfirm', compact('doctorAppointmentInfo', 'clinicInfo', 'docInfo', 'date'))
             ->with('appointmentSuccessMessage', 'Appointment success!Confirmation has been sent to your email.');
     }
@@ -28,7 +28,7 @@ class MailController extends Controller
         $serviceInfo = $request->session()->get('service');
         $clinicInfo = $request->session()->get('clinic');
         $date= $request->session()->get('date');
-        Mail::to($request->user())->send(new ServiceAppointmentConfirm($serviceAppointmentInfo));
+        // Mail::to($request->user())->send(new ServiceAppointmentConfirm($serviceAppointmentInfo));
         return view('patient.serviceAppointments.appointmentConfirm', compact('serviceAppointmentInfo', 'serviceInfo', 'clinicInfo', 'date'))
             ->with('appointmentSuccessMessage', 'Appointment success!Confirmation has been sent to your email.');
     }

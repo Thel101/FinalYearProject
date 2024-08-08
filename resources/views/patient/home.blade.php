@@ -31,7 +31,8 @@
 
                         <div class="col-3 offset-1">
                             <input type="search" class="form-control" name="searchedTownship"
-                                placeholder="&#xf3c5; Township" id="searchedTownshipInput" value="{{ request('searchedTownship') }}">
+                                placeholder="&#xf3c5; Township" id="searchedTownshipInput"
+                                value="{{ request('searchedTownship') }}">
                         </div>
 
                         <div class="col-5">
@@ -224,7 +225,7 @@
                 </div>
                 <div class="row justify-content-end">
                     <div class="col col-2">
-                        <a href="{{ route('patient.services') }}">View More Services</a>
+                        <a href="#">View More Services</a>
                     </div>
                 </div>
             </div>
@@ -702,17 +703,21 @@
         // Event listener for input changes
         $('#searchedTownshipInput').on('keyup', function() {
             var searchedTownship = $(this).val();
-        $.ajax({
-            type: "GET",
-            url: "http://127.0.0.1:8000/search",
-            data: { 'searchedTownship' : searchedTownship},
-            success: function (response) {
-                $('#clinicList').html(response);
-            }
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:8000/search",
+                data: {
+                    'searchedTownship': searchedTownship
+                },
+                success: function(response) {
+                    $('#clinicList').html(response);
+                }
+            });
         });
+        document.addEventListener('touchstart', function(e) {
+            // Your touchstart event handling logic here
+        }, {
+            passive: true
         });
-          document.addEventListener('touchstart', function(e) {
-        // Your touchstart event handling logic here
-    }, { passive: true });
     </script>
 @endsection

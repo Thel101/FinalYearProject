@@ -37,7 +37,7 @@
 </div>
 <div>
     <div class="my-2 offset-2">
-        <a href="{{route('admin.doctorList')}}">Back to List</a>
+        <a href="{{ route('admin.doctorList') }}">Back to List</a>
     </div>
     @if (!is_null($doctors) && count($doctors) > 0)
 
@@ -150,8 +150,9 @@
                                     </div>
                                     <div class="modal-footer">
 
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Add
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary ">Add
                                             Doctor</button>
                                     </div>
                                 </form>
@@ -173,13 +174,14 @@
     $(document).ready(function() {
         $('.btnAdd').click(function() {
             var docId = $(this).val();
-            $('.btnConfirm').val(docId);
-            console.log($('.btnConfirm').val());
+            $('#doctorID').val(docId);
+            console.log($('#doctorID').val());
 
         });
         $('.btnConfirm').click(function() {
             $('#confirmForm').hide();
             var Doc_id = $(this).val();
+            console.log(Doc_id);
             $.ajax({
                 type: "GET",
                 url: "http://127.0.0.1:8000/admin/doctor/search/results/" + Doc_id,

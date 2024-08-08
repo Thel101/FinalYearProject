@@ -14,7 +14,10 @@
         "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.9",
         "laravel/tinker": "^2.7",
-        "livewire/livewire": "^2.11"
+        "livewire/livewire": "^2.11",
+        "nyholm/psr7": "^1.8",
+        "railsware/mailtrap-php": "^2.0",
+        "symfony/http-client": "^6.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -62,7 +65,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",

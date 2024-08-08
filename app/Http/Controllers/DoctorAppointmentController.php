@@ -139,8 +139,6 @@ class DoctorAppointmentController extends Controller
         $clinicInfo= $this->infoClinic($doctorAppointmentInfo->clinic_id);
         $docInfo = Doctors::where('id', $docId)->first();
 
-        // session(['appointmentData' => compact('doctorAppointmentInfo', 'clinicInfo', 'docInfo')]);
-
         $request->session()->put('doctorAppointmentInfo', $doctorAppointmentInfo);
         $request->session()->put('date', $date);
         $request->session()->put('clinicInfo', $clinicInfo);

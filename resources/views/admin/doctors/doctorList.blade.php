@@ -74,11 +74,14 @@
                                 <td>{{ $d->specialty_name }}</td>
                                 <td>{{ $d->consultation_fees }} MMK</td>
                                 <td>
-                                    <a class="btn btn-sm btn-primary updBtn" href="{{route('admin.doctorDetail', $d->id)}}" title="detail"><i
+                                    <a class="btn btn-sm btn-primary updBtn"
+                                        href="{{ route('admin.doctorDetail', $d->id) }}" title="detail"><i
                                             class="fa-solid fa-pen-to-square"></i></a>
 
-                                    <button type="button" class="btn btn-sm btn-danger removeBtn" data-bs-toggle="modal"
-                                    data-bs-target="#confirmForm" value="{{ $d->id }}" title="view doctor"><i class="fa-solid fa-user-xmark"></i></button>
+                                    <button type="button" class="btn btn-sm btn-danger removeBtn"
+                                        data-bs-toggle="modal" data-bs-target="#confirmForm"
+                                        value="{{ $d->id }}" title="view doctor"><i
+                                            class="fa-solid fa-user-xmark"></i></button>
 
                                 </td>
                             </tr>
@@ -95,8 +98,9 @@
 
         <!-- /.card-body -->
     </div>
-    <div><a href="{{ route('admin.searchDoctorForm') }}" class="btn btn-primary mb-3"><i class="fa-solid fa-plus"></i>Add
-        from existing doctor</a></div>
+    <div><a href="{{ route('admin.searchDoctorForm') }}" class="btn btn-primary mb-3"><i
+                class="fa-solid fa-plus"></i>Add
+            from existing doctor</a></div>
     <!-- /.card -->
     <!-- /.card -->
     <!-- deactivate modal -->
@@ -113,8 +117,7 @@
                             <strong>Are you sure you want to remove doctor from the clinic?</strong>
                             <input type="hidden" value="" name="doctorId" id="removeId">
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Confirm</button>
                             </div>
                         </form>
@@ -132,8 +135,8 @@
         $(document).ready(function() {
             $('#doctorTable').DataTable();
 
-            $('.updBtn').click(function(){
-                var docId= $(this).val();
+            $('.updBtn').click(function() {
+                var docId = $(this).val();
                 $.ajax({
                     type: "GET",
                     url: "http://127.0.0.1:8000/admin/doctor/edit/" + docId,
