@@ -36,7 +36,7 @@ class DoctorController extends Controller
         $specialties = Specialty::get();
         $clinic = $this->clinicInfo();
 
-        return view('admin.registerDoctor', compact('clinic', 'specialties'));
+        return view('admin.doctors.registerDoctor', compact('clinic', 'specialties'));
     }
     //register doctor
     public function registerDoctor(Request $request)
@@ -60,7 +60,7 @@ class DoctorController extends Controller
             ->first();
         if ($existing_doctor) {
 
-            return view('admin.addDoctor', compact('clinic', 'existing_doctor'));
+            return view('admin.doctors.addDoctor', compact('clinic', 'existing_doctor'));
         } else {
 
             // dd($data);
@@ -87,6 +87,7 @@ class DoctorController extends Controller
     //add existing doctor
     public function addDoctor(Request $request)
     {
+
         $doctorId = $request->doctorID;
         $clinicId = Auth::user()->clinic_id;
         $doctor = Doctors::find($doctorId);
@@ -277,14 +278,15 @@ class DoctorController extends Controller
         $doctors = [];
         return view('admin.doctors.searchDoctor', compact('clinic', 'doctors'));
     }
-    public function searchDuplicateDoctor($dId){
+    public function searchDuplicateDoctor($dId)
+    {
         $docID = $dId;
-        $clinicID= Auth::user()->clinic_id;
-        $doctors = Doctors::find($docID)->clinics()->where('clinics_id',$clinicID)->exists();
+        $clinicID = Auth::user()->clinic_id;
+        $doctors = Doctors::find($docID)->clinics()->where('clinics_id', $clinicID)->exists();
         // logger($doctors);
-        if($doctors){
+        if ($doctors) {
             logger($doctors);
-            return response()->json(['message'=> 'Doctor Schedule already exists in the clinic']);
+            return response()->json(['message' => 'Doctor Schedule already exists in the clinic']);
         }
     }
 
@@ -326,7 +328,7 @@ class DoctorController extends Controller
     public function doctorDashboardAppointment()
     {
         $doctor = $this->doctorDasbhoard();
-        $docID = $doctor->id;
+        // $docID = $doctor->id;
         $counts = $this->getDoctorAppointmentCount($docID);
 
         return view('doctor.appointmentTableTemplate', compact('doctor', 'counts'));
@@ -360,7 +362,8 @@ class DoctorController extends Controller
         return view('doctor.cancelledAppointments', compact('cancelled_appointments', 'doctor', 'counts'));
     }
     //missed appointments
-    public function missedAppointments(){
+    public function missedAppointments()
+    {
         $doctor = $this->doctorDasbhoard();
         $docID = $doctor->id;
         $missed_appointments = $this->getMissedDoctorAppointments($docID);
@@ -451,7 +454,7 @@ class DoctorController extends Controller
         )
             ->where('doctor_appointments.doctor_id', $doctorId)
             ->where('doctor_appointments.status', 'cancelled')
-            ->whereDate('doctor_appointments.appointment_date','>=', $today)
+            ->whereDate('doctor_appointments.appointment_date', '>=', $today)
             ->leftJoin('users', 'users.id', 'doctor_appointments.booking_person')
             ->leftJoin('clinics', 'clinics.id', 'doctor_appointments.clinic_id')
             ->get();

@@ -84,7 +84,7 @@ class PatientController extends Controller
         $services = Services::where('clinic_id', $clinicID)->get();
 
         $doctors = $clinic->doctors->unique();
-        return view('patient.clinicDetail', compact('clinic', 'services','doctors'));
+        return view('patient.clinicDetail', compact('clinic', 'services', 'doctors'));
     }
     //clinic Section
     public function clinicDisplay($id)
@@ -99,7 +99,7 @@ class PatientController extends Controller
     //register form
     public function registerPatient()
     {
-        return view('patient.register');
+        return view('patient.Account.register');
     }
     //register function
     public function patientRegister(Request $request)
@@ -182,7 +182,7 @@ class PatientController extends Controller
         $today = Carbon::now();
         $twoDaysBefore = $today->copy()->subDay(2);
 
-        foreach ($appointments as $appointment){
+        foreach ($appointments as $appointment) {
             if ($appointment->appointment_date->isSameDay($twoDaysBefore) && $appointment->status == 'booked') {
                 $appointment->status = 'missed';
                 $appointment->save();
@@ -196,7 +196,6 @@ class PatientController extends Controller
             } else {
                 $appointment->isWithinRange = true;
             }
-
         }
         return view('patient.serviceAppointments.serviceAppointmentList', compact('appointments'));
     }
@@ -219,8 +218,8 @@ class PatientController extends Controller
             ->get();
         $today = Carbon::now();
 
-        foreach ($appointments as $appointment){
-            if(($today > $appointment->appointment_date) && $appointment->status== 'booked') {
+        foreach ($appointments as $appointment) {
+            if (($today > $appointment->appointment_date) && $appointment->status == 'booked') {
                 $appointment->status = 'missed';
                 $appointment->save();
             }
@@ -233,7 +232,6 @@ class PatientController extends Controller
             } else {
                 $appointment->isWithinRange = true;
             }
-
         }
 
         return view('patient.doctorAppointments.doctorAppointmentList', compact('appointments'));
@@ -241,26 +239,28 @@ class PatientController extends Controller
     //patient dashboard medical record list
     public function records()
     {
-        $consultationRecordLists = DoctorMedicalRecords::select('doctor_medical_records.*','doctors.name as doctor_name', 'doctor_appointments.appointment_date as appointment_date')
-        ->leftJoin('doctor_appointments','doctor_appointments.id','doctor_medical_records.appointment_id')
-        ->leftJoin('doctors','doctors.id','doctor_appointments.doctor_id')
-        ->where('doctor_appointments.patient_id',Auth::user()->id)->get();
-        $serviceRecordLists= ServiceMedicalRecords::select(
+        $consultationRecordLists = DoctorMedicalRecords::select('doctor_medical_records.*', 'doctors.name as doctor_name', 'doctor_appointments.appointment_date as appointment_date')
+            ->leftJoin('doctor_appointments', 'doctor_appointments.id', 'doctor_medical_records.appointment_id')
+            ->leftJoin('doctors', 'doctors.id', 'doctor_appointments.doctor_id')
+            ->where('doctor_appointments.patient_id', Auth::user()->id)->get();
+        $serviceRecordLists = ServiceMedicalRecords::select(
             'service_medical_records.*',
             'service_appointments.appointment_date as appointment_date',
-            'services.name as service_name')
-        ->where('service_medical_records.patient_id', Auth::user()->id)
-        ->leftJoin('service_appointments', 'service_appointments.id', 'service_medical_records.service_appointment_id')
-        ->leftJoin('services','services.id','service_appointments.service_id')
-        ->get();
-        return view('patient.Account.recordList', compact('serviceRecordLists','consultationRecordLists'));
+            'services.name as service_name'
+        )
+            ->where('service_medical_records.patient_id', Auth::user()->id)
+            ->leftJoin('service_appointments', 'service_appointments.id', 'service_medical_records.service_appointment_id')
+            ->leftJoin('services', 'services.id', 'service_appointments.service_id')
+            ->get();
+        return view('patient.Account.recordList', compact('serviceRecordLists', 'consultationRecordLists'));
     }
     //doctor record detail
-    public function viewConsultRecordDetail($id){
+    public function viewConsultRecordDetail($id)
+    {
         $doctorMedicalRecords = DoctorMedicalRecords::select('doctor_medical_records.*', 'doctor_appointments.*')
-        ->where('appointment_id',$id)
-        ->leftJoin('doctor_appointments','doctor_medical_records.appointment_id','doctor_appointments.id')
-        ->first();
+            ->where('appointment_id', $id)
+            ->leftJoin('doctor_appointments', 'doctor_medical_records.appointment_id', 'doctor_appointments.id')
+            ->first();
         return view('patient.Account.consultRecordDetail', compact('doctorMedicalRecords'));
     }
     //service List display
